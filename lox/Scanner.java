@@ -1,7 +1,10 @@
 package lox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static lox.TokenType.*;
 
 public class Scanner {
@@ -10,6 +13,27 @@ public class Scanner {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+
+    private static final Map<String, TokenType> keywords = new HashMap<>();
+
+    static {
+        keywords.put("and", AND);
+        keywords.put("class", CLASS);
+        keywords.put("else", ELSE);
+        keywords.put("false", FALSE);
+        keywords.put("for", FOR);
+        keywords.put("fun", FUN);
+        keywords.put("if", IF);
+        keywords.put("nil", NIL);
+        keywords.put("or", OR);
+        keywords.put("print", PRINT);
+        keywords.put("return", RETURN);
+        keywords.put("super", SUPER);
+        keywords.put("this", THIS);
+        keywords.put("true", TRUE);
+        keywords.put("var", VAR);
+        keywords.put("while", WHILE);
+    }
 
     Scanner(String source) {
         this.source = source;
@@ -46,13 +70,24 @@ public class Scanner {
             case '\t': break;
             case '\n': line++; break;
             case '/':
-                    if (match('/')) {
-                        while (peek() != '\n' && !isAtEnd()) advance();
-                    } else addToken(SLASH);
-                    break;
+                if (match('/')) {
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                } else if (match('*')) {
+                    while (peek() != '*' && peekNext() != '/') {
+                        if (isAtEnd()) {
+                            Lox.error(line, "Unterminated block comment.");
+                            return;
+                        }
+                        if (peek() == '\n') line++;
+                        advance();
+                    }
+                    if (match('*')) advance();
+                } else addToken(SLASH);
+                break;
             case '"': string(); break;
             default:
                 if (isDigit(c)) number();
+                else if (isAlpha(c)) identifier();
                 else Lox.error(line, "Unexpected character '" + c + "'");
         }
     }
@@ -65,6 +100,13 @@ public class Scanner {
         return c >= '0' && c <= '9';
     }
 
+    private boolean isAlpha(char c) {
+        return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_');
+    }
+
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
+    }
 
     private char advance() {
         return source.charAt(current++);
@@ -93,7 +135,7 @@ public class Scanner {
     }
 
     private char peekNext() {
-        if (isAtEnd()) return '\0';
+        if (current + 1 >= source.length()) return '\0';
         return source.charAt(current + 1);
     }
 
@@ -126,5 +168,12 @@ public class Scanner {
         }
 
         addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+
+    private void identifier() {
+        while (isAlphaNumeric(peek())) advance();
+        String text = source.substring(start, current);
+        TokenType type = keywords.get(text);
+        addToken(type);
     }
 }
