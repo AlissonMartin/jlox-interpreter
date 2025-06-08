@@ -25,7 +25,20 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return ternary();
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+
+        if (match(QUESTION_MARK)) {
+            Expr leftCondition = expression();
+            consume(COLON, "Missing colon");
+            Expr rightCondition = expression();
+
+            expr = new Expr.Ternary(expr, leftCondition, rightCondition);
+        }
+        return expr;
     }
 
     private Expr equality() {
