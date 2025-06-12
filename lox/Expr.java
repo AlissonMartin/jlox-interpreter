@@ -1,13 +1,31 @@
 package lox;
+
 abstract class Expr {
 
     interface Visitor<R> {
+        R visitAssignExpr(Assign assign);
         R visitBinaryExpr(Binary binary);
         R visitGroupingExpr(Grouping grouping);
         R visitLiteralExpr(Literal literal);
         R visitUnaryExpr(Unary unary);
         R visitTernaryExpr(Ternary ternary);
+        R visitVariableExpr(Variable variable);
 }
+
+    static class Assign extends Expr {
+
+        final Token name;
+        final Expr value;
+        Assign(Token name, Expr value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitAssignExpr(this);
+        }
+    }
 
     static class Binary extends Expr {
 
@@ -71,7 +89,6 @@ abstract class Expr {
         final Expr condition;
         final Expr trueCondition;
         final Expr falseCondition;
-
         Ternary(Expr condition, Expr trueCondition, Expr falseCondition) {
             this.condition = condition;
             this.trueCondition = trueCondition;
@@ -81,6 +98,19 @@ abstract class Expr {
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitTernaryExpr(this);
+        }
+    }
+
+    static class Variable extends Expr {
+
+        final Token name;
+        Variable(Token name) {
+            this.name = name;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVariableExpr(this);
         }
     }
 
