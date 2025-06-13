@@ -55,6 +55,14 @@ public class Lox {
 
         if (hadError) return;
 
+        if (statements.size() == 1 && statements.get(0) instanceof Stmt.Expression) {
+            Object value = interpreter.evaluate(((Stmt.Expression) statements.get(0)).expression);
+
+            if (value != null) {
+                System.out.println(interpreter.stringify(value));
+            }
+        }
+
         interpreter.interpret(statements);
     }
 
