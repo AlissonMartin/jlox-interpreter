@@ -1,5 +1,7 @@
 package lox;
 
+import java.util.List;
+
 abstract class Expr {
 
     interface Visitor<R> {
@@ -86,6 +88,7 @@ abstract class Expr {
     }
 
     static class Ternary extends Expr {
+
         final Expr condition;
         final Expr trueCondition;
         final Expr falseCondition;
