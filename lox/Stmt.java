@@ -7,9 +7,10 @@ abstract class Stmt {
     interface Visitor<R> {
         R visitBlockStmt(Block block);
         R visitExpressionStmt(Expression expression);
-        R visitIfStmt(If ifStmt);
+        R visitIfConditionStmt(IfCondition ifcondition);
         R visitPrintStmt(Print print);
         R visitVarStmt(Var var);
+        R visitWhileLoopStmt(WhileLoop whileloop);
 }
 
     static class Block extends Stmt {
@@ -38,12 +39,12 @@ abstract class Stmt {
         }
     }
 
-    static class If extends Stmt {
+    static class IfCondition extends Stmt {
 
         final Expr condition;
         final Stmt thenBranch;
         final Stmt elseBranch;
-        If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+        IfCondition(Expr condition, Stmt thenBranch, Stmt elseBranch) {
             this.condition = condition;
             this.thenBranch = thenBranch;
             this.elseBranch = elseBranch;
@@ -51,7 +52,7 @@ abstract class Stmt {
 
         @Override
         <R> R accept(Visitor<R> visitor) {
-            return visitor.visitIfStmt(this);
+            return visitor.visitIfConditionStmt(this);
         }
     }
 
@@ -80,6 +81,21 @@ abstract class Stmt {
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitVarStmt(this);
+        }
+    }
+
+    static class WhileLoop extends Stmt {
+
+        final Expr condition;
+        final Stmt body;
+        WhileLoop(Expr condition, Stmt body) {
+            this.condition = condition;
+            this.body = body;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitWhileLoopStmt(this);
         }
     }
 

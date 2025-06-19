@@ -52,11 +52,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    public Void visitIfStmt(Stmt.If stmt) {
+    public Void visitIfConditionStmt(Stmt.IfCondition stmt) {
         if (isTruthy(evaluate(stmt.condition))) {
             execute(stmt.thenBranch);
         } else if (stmt.elseBranch != null) {
             execute(stmt.elseBranch);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitWhileLoopStmt(Stmt.WhileLoop whileloop) {
+        while(isTruthy(evaluate(whileloop.condition))) {
+            execute(whileloop.body);
         }
         return null;
     }
@@ -130,7 +138,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return right + left.toString();
                 }
 
-                throw new RuntimeError(expr.operator, "Operands don't match.");
+                throw new RuntimeError(expr.operator, "Operands don't match. Left: " + left + ", Right: " + right + ", Types: " + (left == null ? "null" : left.getClass().getSimpleName()) + ", " + (right == null ? "null" : right.getClass().getSimpleName()));
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 if ((Double) right == 0) {
@@ -207,11 +215,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     void executeBlock(List<Stmt> statements, Environment environment) {
-        Environment previous = environment;
-
+        Environment previous = this.environment;
         try {
             this.environment = environment;
-
             for (Stmt statement : statements) {
                 execute(statement);
             }
