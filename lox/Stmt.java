@@ -10,6 +10,7 @@ abstract class Stmt {
         R visitFunctionStmt(Function function);
         R visitIfConditionStmt(IfCondition ifcondition);
         R visitPrintStmt(Print print);
+        R visitReturnStmtStmt(ReturnStmt returnstmt);
         R visitVarStmt(Var var);
         R visitWhileLoopStmt(WhileLoop whileloop);
 }
@@ -84,6 +85,21 @@ abstract class Stmt {
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitPrintStmt(this);
+        }
+    }
+
+    static class ReturnStmt extends Stmt {
+
+        final Token keyword;
+        final Expr value;
+        ReturnStmt(Token keyword, Expr value) {
+            this.keyword = keyword;
+            this.value = value;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitReturnStmtStmt(this);
         }
     }
 
