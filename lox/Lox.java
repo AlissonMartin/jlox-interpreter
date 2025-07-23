@@ -55,6 +55,11 @@ public class Lox {
 
         if (hadError) return;
 
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        if (hadError) return; // Checks for resolver errors
+
         if (statements.size() == 1 && statements.get(0) instanceof Stmt.Expression) {
             Object value = interpreter.evaluate(((Stmt.Expression) statements.get(0)).expression);
 
