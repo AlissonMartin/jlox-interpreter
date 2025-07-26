@@ -1,5 +1,5 @@
 package lox;
 
 public enum FunctionType {
-    NONE,FUNCTION
+    NONE,FUNCTION,INITIALZER,METHOD
 }

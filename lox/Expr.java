@@ -8,6 +8,9 @@ abstract class Expr {
         R visitAssignExpr(Assign assign);
         R visitBinaryExpr(Binary binary);
         R visitCallExpr(Call call);
+        R visitGetExpr(Get get);
+        R visitSetExpr(Set set);
+        R visitLoxThisExpr(LoxThis loxthis);
         R visitGroupingExpr(Grouping grouping);
         R visitLiteralExpr(Literal literal);
         R visitLogicalExpr(Logical logical);
@@ -62,6 +65,51 @@ abstract class Expr {
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitCallExpr(this);
+        }
+    }
+
+    static class Get extends Expr {
+
+        final Expr object;
+        final Token name;
+        Get(Expr object, Token name) {
+            this.object = object;
+            this.name = name;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitGetExpr(this);
+        }
+    }
+
+    static class Set extends Expr {
+
+        final Expr object;
+        final Token name;
+        final Expr value;
+        Set(Expr object, Token name, Expr value) {
+            this.object = object;
+            this.name = name;
+            this.value = value;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitSetExpr(this);
+        }
+    }
+
+    static class LoxThis extends Expr {
+
+        final Token keyword;
+        LoxThis(Token keyword) {
+            this.keyword = keyword;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitLoxThisExpr(this);
         }
     }
 
