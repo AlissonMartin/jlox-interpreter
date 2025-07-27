@@ -56,13 +56,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitClassDefStmt(Stmt.ClassDef stmt) {
         environment.define(stmt.name.lexeme, null);
         Map<String, LoxFunction> methods = new HashMap<>();
+        Map<String, LoxFunction> staticMethods = new HashMap<>();
 
         for(Stmt.Function method : stmt.methods) {
             LoxFunction function = new LoxFunction(method, environment, method.name.lexeme.equals("init"));
 
             methods.put(method.name.lexeme, function);
         }
-        LoxClass loxClass = new LoxClass(stmt.name.lexeme, methods);
+        for(Stmt.Function method : stmt.staticMethods) {
+            LoxFunction function = new LoxFunction(method, environment, method.name.lexeme.equals("init"));
+
+            staticMethods.put(method.name.lexeme, function);
+        }
+        LoxClass loxClass = new LoxClass(stmt.name.lexeme, methods, staticMethods);
 
         environment.assign(stmt.name, loxClass);
         return null;
@@ -242,6 +248,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         if (object instanceof LoxInstance) {
             return ((LoxInstance) object).get(expr.name);
+        }
+
+        if (object instanceof LoxClass) {
+            LoxFunction staticMethod = ((LoxClass) object).findStaticMethod(expr.name.lexeme);
+            if (staticMethod != null) {
+                return staticMethod;
+            }
         }
 
         throw new RuntimeError(expr.name, "Can only get functions and classes.");
