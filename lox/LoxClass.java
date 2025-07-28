@@ -8,9 +8,11 @@ public class LoxClass implements LoxCallable{
     final String name;
     private Map<String, LoxFunction> methods;
     private Map<String, LoxFunction> staticMethods;
+    final LoxClass superclass;
 
-    LoxClass(String name, Map<String, LoxFunction> methods,  Map<String, LoxFunction> staticMethods) {
+    LoxClass(String name, LoxClass superclass, Map<String, LoxFunction> methods,  Map<String, LoxFunction> staticMethods) {
         this.name = name;
+        this.superclass = superclass;
         this.methods = methods;
         this.staticMethods = staticMethods;
     }
@@ -18,6 +20,10 @@ public class LoxClass implements LoxCallable{
     LoxFunction findMethod(String name) {
         if (methods.containsKey(name)) {
             return methods.get(name);
+        }
+
+        if (superclass != null) {
+            return superclass.findMethod(name);
         }
         return null;
     }

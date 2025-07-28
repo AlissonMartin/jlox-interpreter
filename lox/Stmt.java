@@ -32,10 +32,12 @@ abstract class Stmt {
     static class ClassDef extends Stmt {
 
         final Token name;
+        final Expr.Variable superclass;
         final List<Stmt.Function> methods;
         final List<Stmt.Function> staticMethods;
-        ClassDef(Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods) {
+        ClassDef(Token name, Expr.Variable superclass, List<Stmt.Function> methods, List<Stmt.Function> staticMethods) {
             this.name = name;
+            this.superclass = superclass;
             this.methods = methods;
             this.staticMethods = staticMethods;
         }

@@ -12,9 +12,9 @@ public class GenerateAst {
              System.exit(64);
          }
          String outputDir = args[0];
-         defineAst(outputDir, "Expr", Arrays.asList("Assign : Token name, Expr value", "Binary : Expr left, Token operator, Expr right", "Call : Expr callee, Token paren, List<Expr> arguments", "Get : Expr object, Token name", "Set : Expr object, Token name, Expr value", "LoxThis : Token keyword", "Grouping : Expr expression", "Literal : Object value", "Logical : Expr left, Token operator, Expr right", "Unary : Token operator, Expr right", "Ternary : Expr condition, Expr trueCondition, Expr falseCondition", "Variable : Token name"));
+         defineAst(outputDir, "Expr", Arrays.asList("Assign : Token name, Expr value", "Binary : Expr left, Token operator, Expr right", "Call : Expr callee, Token paren, List<Expr> arguments", "Get : Expr object, Token name", "Set : Expr object, Token name, Expr value", "LoxSuper : Token keyword, Token method", "LoxThis : Token keyword", "Grouping : Expr expression", "Literal : Object value", "Logical : Expr left, Token operator, Expr right", "Unary : Token operator, Expr right", "Ternary : Expr condition, Expr trueCondition, Expr falseCondition", "Variable : Token name"));
 
-         defineAst(outputDir, "Stmt", Arrays.asList("Block : List<Stmt> statements", "ClassDef : Token name, List<Stmt.Function> methods, List<Stmt.Function> staticMethods", "Expression : Expr expression", "Function : Token name, List<Token> params, List<Stmt> body", "IfCondition : Expr condition, Stmt thenBranch," + " Stmt elseBranch", "Print : Expr expression","ReturnStmt : Token keyword, Expr value", "Var : Token name, Expr initializer", "WhileLoop : Expr condition, Stmt body"));
+         defineAst(outputDir, "Stmt", Arrays.asList("Block : List<Stmt> statements", "ClassDef : Token name, Expr.Variable superclass, List<Stmt.Function> methods, List<Stmt.Function> staticMethods", "Expression : Expr expression", "Function : Token name, List<Token> params, List<Stmt> body", "IfCondition : Expr condition, Stmt thenBranch," + " Stmt elseBranch", "Print : Expr expression","ReturnStmt : Token keyword, Expr value", "Var : Token name, Expr initializer", "WhileLoop : Expr condition, Stmt body"));
     }
 
 

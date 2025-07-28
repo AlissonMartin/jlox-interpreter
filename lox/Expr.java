@@ -10,6 +10,7 @@ abstract class Expr {
         R visitCallExpr(Call call);
         R visitGetExpr(Get get);
         R visitSetExpr(Set set);
+        R visitLoxSuperExpr(LoxSuper loxsuper);
         R visitLoxThisExpr(LoxThis loxthis);
         R visitGroupingExpr(Grouping grouping);
         R visitLiteralExpr(Literal literal);
@@ -97,6 +98,21 @@ abstract class Expr {
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitSetExpr(this);
+        }
+    }
+
+    static class LoxSuper extends Expr {
+
+        final Token keyword;
+        final Token method;
+        LoxSuper(Token keyword, Token method) {
+            this.keyword = keyword;
+            this.method = method;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitLoxSuperExpr(this);
         }
     }
 
