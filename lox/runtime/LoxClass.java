@@ -1,23 +1,26 @@
-package lox;
+package lox.runtime;
+
+import lox.interpreter.Interpreter;
+import lox.util.LoxCallable;
 
 import java.util.List;
 import java.util.Map;
 
-public class LoxClass implements LoxCallable{
+public class LoxClass implements LoxCallable {
 
     final String name;
     private Map<String, LoxFunction> methods;
     private Map<String, LoxFunction> staticMethods;
     final LoxClass superclass;
 
-    LoxClass(String name, LoxClass superclass, Map<String, LoxFunction> methods,  Map<String, LoxFunction> staticMethods) {
+    public LoxClass(String name, LoxClass superclass, Map<String, LoxFunction> methods, Map<String, LoxFunction> staticMethods) {
         this.name = name;
         this.superclass = superclass;
         this.methods = methods;
         this.staticMethods = staticMethods;
     }
 
-    LoxFunction findMethod(String name) {
+    public LoxFunction findMethod(String name) {
         if (methods.containsKey(name)) {
             return methods.get(name);
         }
@@ -28,7 +31,7 @@ public class LoxClass implements LoxCallable{
         return null;
     }
 
-    LoxFunction findStaticMethod(String name) {
+    public LoxFunction findStaticMethod(String name) {
         if (staticMethods.containsKey(name)) {
             return staticMethods.get(name);
         }

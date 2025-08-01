@@ -1,21 +1,24 @@
-package lox;
+package lox.runtime;
+
+import lox.util.RuntimeError;
+import lox.scanner.Token;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Environment {
     private final Map<String, Object> values = new HashMap<>();
-    final Environment enclosing;
+    public final Environment enclosing;
 
-    Environment() {
+    public Environment() {
         enclosing = null;
     }
 
-    Environment(Environment enclosing) {
+    public Environment(Environment enclosing) {
         this.enclosing = enclosing;
     }
 
-    Object get(Token name) {
+    public Object get(Token name) {
         if (values.containsKey(name.lexeme)) return values.get(name.lexeme);
 
         if (enclosing != null) return enclosing.get(name);
@@ -23,11 +26,11 @@ public class Environment {
         throw new RuntimeError(name, "Undefined variable: " + name.lexeme);
     }
 
-    Object getAt(int distance, String name) {
+    public Object getAt(int distance, String name) {
         return ancestor(distance).values.get(name);
     }
 
-    void define(String name, Object value) {
+    public void define(String name, Object value) {
         values.put(name, value);
     }
 
@@ -39,7 +42,7 @@ public class Environment {
         return environment;
     }
 
-    void assign(Token name, Object value) {
+    public void assign(Token name, Object value) {
         if (values.containsKey(name.lexeme)) {
             values.put(name.lexeme, value);
             return;
@@ -53,7 +56,7 @@ public class Environment {
         throw new RuntimeError(name, "Undefined variable: " + name.lexeme);
     }
 
-    void assignAt(int distance, Token name, Object value) {
+    public void assignAt(int distance, Token name, Object value) {
         ancestor(distance).values.put(name.lexeme, value);
     }
 }

@@ -1,5 +1,14 @@
 package lox;
 
+import lox.ast.Stmt;
+import lox.interpreter.Interpreter;
+import lox.parser.Parser;
+import lox.resolver.Resolver;
+import lox.scanner.Scanner;
+import lox.scanner.Token;
+import lox.util.RuntimeError;
+import lox.util.TokenType;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -72,11 +81,11 @@ public class Lox {
     }
 
     // Error
-    static void error(int line, String message) {
+    public static void error(int line, String message) {
         report(line, "", message);
     }
 
-    static void error(Token token, String message) {
+    public static void error(Token token, String message) {
         if (token.type == TokenType.EOF) {
             report(token.line, "at end", message);
         } else {
@@ -84,7 +93,7 @@ public class Lox {
         }
     }
 
-    static void runtimeError(RuntimeError error) {
+    public static void runtimeError(RuntimeError error) {
         System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
         hadRuntimeError = true;
     }

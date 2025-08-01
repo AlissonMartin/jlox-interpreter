@@ -1,4 +1,16 @@
-package lox;
+package lox.interpreter;
+
+import lox.Lox;
+import lox.util.RuntimeError;
+import lox.scanner.Token;
+import lox.ast.Expr;
+import lox.ast.Stmt;
+import lox.runtime.Environment;
+import lox.runtime.LoxClass;
+import lox.runtime.LoxFunction;
+import lox.runtime.LoxInstance;
+import lox.util.LoxCallable;
+import lox.util.TokenType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +19,11 @@ import java.util.Map;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
-    final Environment globals = new Environment();
+    public final Environment globals = new Environment();
     private Environment environment = globals;
     private final Map<Expr, Integer> locals = new HashMap<>();
 
-    Interpreter() {
+    public Interpreter() {
         globals.define("clock", new LoxCallable() {
             @Override
             public int arity() {return 0;}
@@ -26,7 +38,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         });
     }
 
-    void interpret(List<Stmt> statements) {
+    public void interpret(List<Stmt> statements) {
         try {
             for (Stmt statement : statements) {
                 execute(statement);
@@ -36,7 +48,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
-    Object evaluate(Expr expr) {
+    public Object evaluate(Expr expr) {
         return expr.accept(this);
     }
 
@@ -44,7 +56,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         stmt.accept(this);
     }
 
-    void resolve(Expr expr, int depth) {
+    public void resolve(Expr expr, int depth) {
         locals.put(expr,depth);
     }
 
@@ -366,7 +378,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return true;
     }
 
-    String stringify(Object value) {
+    public String stringify(Object value) {
         if (value == null) return "nil";
 
         if (value instanceof Double) {
@@ -379,7 +391,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return value.toString();
     }
 
-    void executeBlock(List<Stmt> statements, Environment environment) {
+    public void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;
         try {
             this.environment = environment;

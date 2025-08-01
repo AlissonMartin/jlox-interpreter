@@ -1,4 +1,7 @@
-package lox;
+package lox.runtime;
+
+import lox.util.RuntimeError;
+import lox.scanner.Token;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +21,7 @@ public class LoxInstance {
         return loxClass.name + " instance";
     }
 
-    Object get (Token name) {
+    public Object get(Token name) {
         if (fields.containsKey(name.lexeme)) {
             return fields.get(name.lexeme);
         }
@@ -28,7 +31,7 @@ public class LoxInstance {
         throw new RuntimeError(name, "Undefined property " + name.lexeme +  ".");
     }
 
-    void set(Token name, Object value) {
+    public void set(Token name, Object value) {
         fields.put(name.lexeme, value);
     }
 }

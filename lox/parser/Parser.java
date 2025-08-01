@@ -1,10 +1,16 @@
-package lox;
+package lox.parser;
+
+import lox.ast.Expr;
+import lox.Lox;
+import lox.ast.Stmt;
+import lox.scanner.Token;
+import lox.util.TokenType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static lox.TokenType.*;
+import static lox.util.TokenType.*;
 
 public class Parser {
 
@@ -14,11 +20,11 @@ public class Parser {
 
     private int current = 0;
 
-    Parser(List<Token> tokens) {
+    public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
 
-    List<Stmt> parse() {
+    public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
 
         while (!isAtEnd()) {
@@ -375,7 +381,7 @@ public class Parser {
             consume(DOT, "Expect '.' after 'super'.");
 
             Token method = consume(IDENTIFIER, "Expect method name.");
-            return new Expr.Super(keyword, method);
+            return new Expr.LoxSuper(keyword, method);
         }
 
         if (match(THIS)) {

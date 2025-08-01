@@ -1,6 +1,13 @@
-package lox;
+package lox.resolver;
 
-import javax.management.monitor.StringMonitor;
+import lox.Lox;
+import lox.ast.Expr;
+import lox.ast.Stmt;
+import lox.interpreter.Interpreter;
+import lox.scanner.Token;
+import lox.util.ClassType;
+import lox.util.FunctionType;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +20,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private FunctionType currentFunction = FunctionType.NONE;
     private ClassType currentClass = ClassType.NONE;
 
-    Resolver(Interpreter interpreter) {
+    public Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
     }
 
@@ -237,7 +244,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         expr.accept(this);
     }
 
-    void resolve(List<Stmt> statements) {
+    public void resolve(List<Stmt> statements) {
         for (Stmt statement : statements) {
             resolve(statement);
         }

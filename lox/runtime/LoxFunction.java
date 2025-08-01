@@ -1,4 +1,9 @@
-package lox;
+package lox.runtime;
+
+import lox.interpreter.Interpreter;
+import lox.interpreter.Return;
+import lox.ast.Stmt;
+import lox.util.LoxCallable;
 
 import java.util.List;
 
@@ -7,7 +12,7 @@ public class LoxFunction implements LoxCallable {
     private final Environment closure;
     private final boolean isInitializer;
 
-    LoxFunction(Stmt.Function declaration, Environment closure, boolean isInitializer) {
+    public LoxFunction(Stmt.Function declaration, Environment closure, boolean isInitializer) {
         this.isInitializer = isInitializer;
         this.declaration = declaration;
         this.closure = closure;
@@ -35,7 +40,7 @@ public class LoxFunction implements LoxCallable {
         return null;
     }
 
-    LoxFunction bind(LoxInstance instance) {
+    public LoxFunction bind(LoxInstance instance) {
         Environment environment = new Environment(closure);
 
         environment.define("this", instance);

@@ -1,4 +1,6 @@
-package lox;
+package lox.util;
+
+import lox.interpreter.Interpreter;
 
 import java.util.List;
 

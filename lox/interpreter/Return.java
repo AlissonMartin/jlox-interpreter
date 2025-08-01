@@ -1,7 +1,7 @@
-package lox;
+package lox.interpreter;
 
 public class Return extends RuntimeException {
-    final Object value;
+    public final Object value;
 
     Return (Object value) {
         super(null, null, false, false);
